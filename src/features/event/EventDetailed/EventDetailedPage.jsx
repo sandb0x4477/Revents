@@ -29,7 +29,8 @@ const EventDetailedPage = ({event}) => {
       </Grid.Column>
 
       <Grid.Column width={6}>
-        <EventDetailedSidebar attendees={event.attendees}/>
+      {event.attendees &&
+        <EventDetailedSidebar attendees={event.attendees}/>}
       </Grid.Column>
 
     </Grid>
