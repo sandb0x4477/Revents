@@ -11,7 +11,7 @@ const EventDetailedSidebar = ({ attendees }) => {
       <Segment attached>
         <List relaxed divided>
           {attendees &&
-            attendees.map(atendees => (
+            attendees.map(attendees => (
               <Item key={attendees.id} style={{ position: 'relative' }}>
                 {isHost && (
                   <Label style={{ position: 'absolute' }} color="orange" ribbon="right">
