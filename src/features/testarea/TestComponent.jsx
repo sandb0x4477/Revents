@@ -6,23 +6,23 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from 'react-places-autocomplete';
-import { incrementCounter, decrementCounter } from './testActions';
+import { incrementAsync, decrementAsync } from './testActions';
 import { openModal } from '../modals/modalActions';
 
 const mapState = state => ({
-  data: state.test.data
+  data: state.test.data,
+  loading: state.test.loading
 });
 
 const actions = {
-  incrementCounter,
-  decrementCounter,
+  incrementAsync,
+  decrementAsync,
   openModal
 };
 
 // const Marker = () => <Icon name='marker' size='big' color='red'/>
 
 class TestComponent extends Component {
-
   static defaultProps = {
     center: {
       lat: 59.95,
@@ -57,18 +57,38 @@ class TestComponent extends Component {
       onChange: this.onChange
     };
 
-    const { incrementCounter, decrementCounter, data, openModal } = this.props;
+    const {
+      incrementAsync,
+      decrementAsync,
+      data,
+      openModal,
+      loading
+    } = this.props;
     return (
       <div>
         <Script
-         url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiUIK0udHlEnvDAcy3BWJyJZNfqStv5CU&libraries=places"
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiUIK0udHlEnvDAcy3BWJyJZNfqStv5CU&libraries=places"
           onLoad={this.handleScriptLoad}
         />
         <h1>Test Area</h1>
         <h3>The answer is: {data}</h3>
-        <Button onClick={incrementCounter} color="green" content="Increment" />
-        <Button onClick={decrementCounter} color="red" content="Decrement" />
-        <Button onClick={() => openModal('TestModal', {data: 42})} color="teal" content="Open Modal" />
+        <Button
+          loading={loading}
+          onClick={incrementAsync}
+          color="green"
+          content="Increment"
+        />
+        <Button
+          loading={loading}
+          onClick={decrementAsync}
+          color="red"
+          content="Decrement"
+        />
+        <Button
+          onClick={() => openModal('TestModal', { data: 42 })}
+          color="teal"
+          content="Open Modal"
+        />
         <br />
         <br />
         <form onSubmit={this.handleFormSubmit}>
@@ -78,7 +98,7 @@ class TestComponent extends Component {
           <button type="submit">Submit</button>
         </form>
 
-      {/* <div style={{ height: '300px', width: '100%' }}>
+        {/* <div style={{ height: '300px', width: '100%' }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyDiUIK0udHlEnvDAcy3BWJyJZNfqStv5CU' }}
           defaultCenter={this.props.center}
@@ -91,10 +111,12 @@ class TestComponent extends Component {
           />
         </GoogleMapReact>
       </div> */}
-
       </div>
     );
   }
 }
 
-export default connect(mapState, actions)(TestComponent);
+export default connect(
+  mapState,
+  actions
+)(TestComponent);
