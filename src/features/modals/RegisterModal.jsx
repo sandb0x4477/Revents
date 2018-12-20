@@ -14,7 +14,7 @@ class RegisterModal extends Component {
         <Modal.Header>Sign Up to Re-vents!</Modal.Header>
         <Modal.Content>
           <Modal.Description>
-            <RegisterForm />
+            <RegisterForm/>
           </Modal.Description>
         </Modal.Content>
       </Modal>

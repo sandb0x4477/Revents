@@ -77,11 +77,11 @@ body {
 }
 
 .ui.main.container,
-.main.segment  {
+.main.segment {
   margin-top: 7em;
 }
 
-.ui.formSegment  {
+.ui.formSegment {
   margin-top: 1em !important;
 }
 
@@ -98,11 +98,11 @@ body {
   margin-left: 0.5em;
 }
 
-.ui.menu .item>img:not(.ui) {
+.ui.menu .item > img:not(.ui) {
   margin-right: 1.5em !important;
 }
 
-.ui.menu:not(.vertical) .item>.button {
+.ui.menu:not(.vertical) .item > .button {
   margin-left: 0.5em;
 }
 
