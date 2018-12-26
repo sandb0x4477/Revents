@@ -24,3 +24,5 @@ yarn-error.log*
 
 scratch.txt
 /.idea
+
+functions/node_modules/**
