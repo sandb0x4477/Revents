@@ -5,6 +5,8 @@ import {
   COUNTER_ACTION_STARTED
 } from './testConstants';
 
+import firebase from '../../app/config/firebase'
+
 export const incrementCounter = () => {
   return {
     type: INCREMENT_COUNTER
@@ -50,3 +52,16 @@ export const decrementAsync = () => {
     dispach(finishCounterAction());
   };
 };
+
+export const testPermissions = () =>
+  async (dispatch, getState) => {
+    const firestore = firebase.firestore();
+    try {
+      let userDocRef = await firestore.collection('users').doc('D19dMlY3mRe7Qbc5m6UN1ct7mS62')
+      userDocRef.update({
+        displayName: 'testing'
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }
