@@ -3,17 +3,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
 import { withFirestore } from 'react-redux-firebase';
-import {
-  combineValidators,
-  composeValidators,
-  isRequired,
-  hasLengthGreaterThan
-} from 'revalidate';
-// import cuid from 'cuid';
-// import moment from 'moment';
 import Script from 'react-load-script';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
+import {
+  composeValidators,
+  combineValidators,
+  isRequired,
+  hasLengthGreaterThan
+} from 'revalidate';
 import { createEvent, updateEvent, cancelToggle } from '../eventActions';
 import TextInput from '../../../app/common/form/TextInput';
 import TextArea from '../../../app/common/form/TextArea';
@@ -21,7 +19,7 @@ import SelectInput from '../../../app/common/form/SelectInput';
 import DateInput from '../../../app/common/form/DateInput';
 import PlaceInput from '../../../app/common/form/PlaceInput';
 
-const mapState = state => {
+const mapState = (state, ownProps) => {
   let event = {};
 
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
@@ -30,7 +28,8 @@ const mapState = state => {
 
   return {
     initialValues: event,
-    event
+    event,
+    loading: state.async.loading
   };
 };
 
@@ -73,15 +72,10 @@ class EventForm extends Component {
   async componentDidMount() {
     const { firestore, match } = this.props;
     await firestore.setListener(`events/${match.params.id}`);
-    // if (event.exists) {
-    //   this.setState({
-    //     venueLatLng: event.data().venueLatLng
-    //   });
-    // }
   }
 
   async componentWillUnmount() {
-    const {firestore, match} = this.props;
+    const { firestore, match } = this.props;
     await firestore.unsetListener(`events/${match.params.id}`);
   }
 
@@ -117,7 +111,7 @@ class EventForm extends Component {
     values.venueLatLng = this.state.venueLatLng;
     if (this.props.initialValues.id) {
       if (Object.keys(values.venueLatLng).length === 0) {
-        values.venueLatLng = this.props.event.venueLatLng
+        values.venueLatLng = this.props.event.venueLatLng;
       }
       this.props.updateEvent(values);
       this.props.history.goBack();
@@ -128,24 +122,30 @@ class EventForm extends Component {
   };
 
   render() {
-    const { invalid, submitting, pristine, event, cancelToggle } = this.props;
+    const {
+      invalid,
+      submitting,
+      pristine,
+      event,
+      cancelToggle,
+      loading
+    } = this.props;
     return (
       <Grid>
         <Script
-          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiUIK0udHlEnvDAcy3BWJyJZNfqStv5CU&libraries=places"
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1Oy3Ic6JyE6RR4eEbEFw2T-ynXjjWzTc&libraries=places"
           onLoad={this.handleScriptLoaded}
         />
         <Grid.Column width={10}>
           <Segment>
+            <Header sub color="teal" content="Event Details" />
             <Form onSubmit={this.props.handleSubmit(this.onFormSubmit)}>
-              <Header sub color="teal" content="Event Details" />
               <Field
                 name="title"
                 type="text"
                 component={TextInput}
                 placeholder="Give your event a name"
               />
-
               <Field
                 name="category"
                 type="text"
@@ -153,16 +153,14 @@ class EventForm extends Component {
                 options={category}
                 placeholder="What is your event about"
               />
-
               <Field
                 name="description"
                 type="text"
-                rows={3}
                 component={TextArea}
+                rows={3}
                 placeholder="Tell us about your event"
               />
-
-              <Header sub color="teal" content="Event Location Details" />
+              <Header sub color="teal" content="Event Location details" />
               <Field
                 name="city"
                 type="text"
@@ -171,7 +169,6 @@ class EventForm extends Component {
                 placeholder="Event city"
                 onSelect={this.handleCitySelect}
               />
-
               {this.state.scriptLoaded && (
                 <Field
                   name="venue"
@@ -186,7 +183,6 @@ class EventForm extends Component {
                   onSelect={this.handleVenueSelect}
                 />
               )}
-
               <Field
                 name="date"
                 type="text"
@@ -196,25 +192,32 @@ class EventForm extends Component {
                 showTimeSelect
                 placeholder="Date and time of event"
               />
-
               <Button
+                loading={loading}
                 disabled={invalid || submitting || pristine}
                 positive
                 type="submit"
               >
                 Submit
               </Button>
-              <Button onClick={this.props.history.goBack} type="button">
+              <Button
+                disabled={loading}
+                onClick={this.props.history.goBack}
+                type="button"
+              >
                 Cancel
               </Button>
-
-              <Button
-                onClick={() => cancelToggle(!event.cancelled, event.id)}
-                type="button"
-                color={event.cancelled ? 'green' : 'red'}
-                floated="right"
-                content={event.cancelled ? 'Reactivate Event' : 'Cancel Event'}
-              />
+              {event.id && (
+                <Button
+                  onClick={() => cancelToggle(!event.cancelled, event.id)}
+                  type="button"
+                  color={event.cancelled ? 'green' : 'red'}
+                  floated="right"
+                  content={
+                    event.cancelled ? 'Reactivate Event' : 'Cancel Event'
+                  }
+                />
+              )}
             </Form>
           </Segment>
         </Grid.Column>
