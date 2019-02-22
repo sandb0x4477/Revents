@@ -133,7 +133,7 @@ class EventForm extends Component {
     return (
       <Grid>
         <Script
-          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1Oy3Ic6JyE6RR4eEbEFw2T-ynXjjWzTc&libraries=places"
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiUIK0udHlEnvDAcy3BWJyJZNfqStv5CU&libraries=places"
           onLoad={this.handleScriptLoaded}
         />
         <Grid.Column width={10}>

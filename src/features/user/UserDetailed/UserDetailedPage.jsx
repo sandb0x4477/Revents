@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { firestoreConnect, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { toastr } from 'react-redux-toastr';
+
 import UserDetailedHeader from './UserDetailedHeader';
 import UserDetailedDescription from './UserDetailedDescription';
 import UserDetailedPhotos from './UserDetailedPhotos';
@@ -109,3 +110,4 @@ export default compose(
     userDetailedQuery(auth, userUid, match)
   )
 )(UserDetailedPage);
+//
